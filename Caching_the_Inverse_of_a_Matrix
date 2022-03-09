@@ -1,29 +1,32 @@
-library(swirl)
-swirl()
-satish
+## I simply set the input x as a matrix
+## and then set the solved value "inv" as a null
+## then I changed every reference to "mean" to "solve"
 
 
-data(cars)
-?cars
-head(cars)
-plot(cars)
-?plot
-plot(x = cars$speed, y = cars$dist)
-plot(x = cars$dist, y = cars$speed)
-plot(x = cars$speed, y = cars$dist, xlab = "Speed")
-plot(x = cars$speed, y = cars$dist, ylab = "Stopping Distance")
-plot(x = cars$speed, y = cars$dist, xlab = "Speed", ylab = "Stopping Distance")
-plot(cars, main = "My Plot")
-plot(cars, sub = "My Plot Subtitle")
-plot(cars, col = 2)
-plot(cars, xlim = c(10, 15))
-plot(cars, pch = 2)
-data(mtcars)
-play()
-summary(mtcars)
-table(mtcars$mpg)
-names(mtcars)
-nxt()
-?boxplot
-boxplot(mpg ~ cyl, data = mtcars)
-hist(mtcars$mpg)
+
+makeCacheMatrix <- function(x = matrix()) {
+  inv <- NULL
+  set <- function(y) {
+    x <<- y
+    inv <<- NULL
+  }
+  get <- function() x
+  setInverse <- function(inverse) inv <<- inverse
+  getInverse <- function() inv
+  list(set = set,get = get,
+       setInverse = setInverse,
+       getInverse = getInverse)
+}
+
+cacheSolve <- function(x, ...) {
+  ## Return a matrix that is the inverse of 'x'
+  inv <- x$getInverse()
+  if (!is.null(inv)) {
+    message("getting cached data")
+    return(inv)
+  }
+  mat <- x$get()
+  inv <- solve(mat, ...)
+  x$setInverse(inv)
+  inv
+}
